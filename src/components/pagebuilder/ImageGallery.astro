@@ -1,0 +1,47 @@
+---
+import ImagePopout from "./ImagePopout.astro";
+import { getRandomString } from "../helpers/getRandomString";
+const galleryID = getRandomString();
+const { props } = Astro;
+---
+
+<style>
+  .image-gallery {
+    max-width: var(--sectionWidth);
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(var(--galleryImageWidth), 100%), 1fr)
+    );
+    gap: var(--galleryGap);
+    padding: 0 var(--galleryGap);
+    margin-top: var(--galleryGap);
+    margin-bottom: var(--galleryGap);
+  }
+</style>
+
+<div
+  class="image-gallery"
+  style={{
+    "--sectionWidth": props.options.width,
+    "--galleryGap": props.options.gap,
+    "--galleryImageWidth": props.options.imageSize,
+  }}
+>
+  {
+    props.items.map(
+      (item: { altText: string; image: any; caption: string }) => {
+        return (
+          <ImagePopout
+            galleryID={galleryID}
+            altText={item.altText}
+            image={item.image}
+            caption={item.caption}
+            hideCaption={true}
+            forceAspectRatio={props.options.aspectRatio || "3/2"}
+          />
+        );
+      }
+    )
+  }
+</div>

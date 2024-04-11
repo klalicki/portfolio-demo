@@ -1,0 +1,51 @@
+---
+const isDev = process.env.NODE_ENV === "development";
+const fullPath = Astro.url.pathname;
+// console.log(Astro.params.slug);
+const isProject = fullPath.includes("/projects/");
+// console.log(isProject);
+const isHomepage = typeof Astro.params.slug === "undefined";
+let editPath;
+if (isHomepage) {
+  editPath = "/keystatic/singleton/homepage";
+} else {
+  editPath =
+    "/keystatic/collection/" +
+    (isProject ? "projects" : "pages") +
+    "/item/" +
+    Astro.params.slug;
+}
+---
+
+<style>
+  .floating-edit {
+    position: fixed;
+    display: flex;
+    bottom: 1rem;
+    left: 1rem;
+
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .floating-edit a {
+    padding: 0.5em;
+    background-color: white;
+    text-decoration: none;
+    border: 3px solid black;
+    color: black;
+    border-radius: 0.5em;
+    pointer-events: all;
+    font-size: 2rem;
+  }
+  .floating-edit a:hover {
+    background-color: lightblue;
+  }
+</style>
+{
+  isDev && (
+    <div class="floating-edit">
+      <a href={editPath}> Edit this page</a>
+    </div>
+  )
+}

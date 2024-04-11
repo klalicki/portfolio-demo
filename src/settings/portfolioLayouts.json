@@ -1,0 +1,69 @@
+{
+  "typography": {
+    "title": {
+      "fontFamily": "fontStack2",
+      "fontWeight": "700",
+      "fontStyle": "italic",
+      "fontSize": "1.5rem",
+      "lineHeight": 1.25,
+      "color": "#001ca8",
+      "marginTop": "0rem",
+      "marginBottom": "0.25rem"
+    },
+    "line2": {
+      "fontFamily": "fontStack1",
+      "fontWeight": "400",
+      "fontStyle": "normal",
+      "fontSize": "1rem",
+      "lineHeight": 1.25,
+      "color": "#000000",
+      "marginTop": "0rem",
+      "marginBottom": "0.25rem"
+    },
+    "line3": {
+      "fontFamily": "fontStack1",
+      "fontWeight": "400",
+      "fontStyle": "normal",
+      "fontSize": "0.75rem",
+      "lineHeight": 1.25,
+      "color": "#000000",
+      "marginTop": "0rem",
+      "marginBottom": "0.25rem"
+    }
+  },
+  "container": {
+    "width": "1200px",
+    "padding": "1rem",
+    "gap": "1rem"
+  },
+  "coolTile": {
+    "tiles": {
+      "aspectRatio": "4/3",
+      "minWidth": 300,
+      "overlayInset": "1rem",
+      "overlayColor": "#ffffff",
+      "useProjectColor": false,
+      "overlayPadding": "2rem",
+      "overlayOpacity": 70
+    }
+  },
+  "card": {
+    "card": {
+      "minWidth": 300,
+      "borderRadius": "1rem",
+      "padding": "0.75rem",
+      "textPadding": "0px",
+      "cardGap": "0.75rem",
+      "bgColor": "#e6e6e6",
+      "hoverColor": "#a8eeff"
+    },
+    "image": {
+      "aspectRatio": "3/2",
+      "borderRadius": "0.25rem"
+    }
+  },
+  "sideBySide": {
+    "tileAspectRatio": "4/3",
+    "itemGap": "0px"
+  }
+}

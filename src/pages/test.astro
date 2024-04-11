@@ -1,0 +1,21 @@
+---
+const p = import("../../package.json");
+const breakpoint = "700px";
+---
+
+<style
+  set:html={`
+@media screen and (min-width: ${breakpoint} ) {
+  h1 {
+    background-color: lightgreen;
+  }
+}
+`}
+></style>
+<style>
+  h1 {
+    color: blue;
+  }
+</style>
+<h1>Test Page</h1>
+{JSON.stringify(p)}

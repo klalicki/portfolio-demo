@@ -1,0 +1,57 @@
+---
+import SidebarNav from "./SidebarNav.astro";
+import { settings } from "../../helpers/settingsHelper";
+---
+
+<style
+  define:vars={{
+    sidebarWidth: settings.menu.position.value.layout.width,
+    menuBackgroundColor: settings.menu.colors.backgroundColor,
+    menuHeight: settings.menu.sizes.topBarHeight,
+    blurStyle: settings.menu.appearance.blurBehind ? "blur(10px)" : "none",
+  }}
+>
+  main {
+    padding-top: var(--menuHeight);
+  }
+  header {
+    background-color: var(--menuBackgroundColor);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--menuHeight);
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: 10;
+    backdrop-filter: var(--blurStyle);
+  }
+
+  @media screen and (min-width: 768px) {
+    main {
+      position: relative;
+      left: var(--sidebarWidth, 300px);
+      width: calc(100% - var(--sidebarWidth, 300px));
+      padding-top: 0;
+    }
+    header {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebarWidth, 300px);
+      height: 100%;
+      display: flex;
+      overflow-y: auto;
+    }
+  }
+</style>
+<body>
+  <header>
+    <SidebarNav />
+  </header>
+  <main id="main-content">
+    <slot />
+  </main>
+</body>

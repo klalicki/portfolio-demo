@@ -1,0 +1,13 @@
+---
+const {props}=Astro;
+const {justifyContent,gap,alignItems,flexDirection}=props
+---
+<style>
+.multicolumn_container{
+  display: flex;
+  flex-wrap: wrap;
+}
+</style>
+<div class="multicolumn_container" style={{justifyContent:justifyContent,gap:gap,alignItems:alignItems,flexDirection:flexDirection}}>
+  <slot />
+</div>

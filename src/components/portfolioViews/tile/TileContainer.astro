@@ -1,0 +1,37 @@
+---
+const { props } = Astro;
+import { settings } from "../../helpers/settingsHelper";
+const tileSettings = settings.portfolioLayouts.coolTile;
+import { fontRules } from "../../helpers/fontRuleBuilder";
+// @ts-ignore
+const rules = fontRules(settings.portfolioLayouts.typography);
+import { formatCssRules } from "../../helpers/formatCssRules";
+
+const coolTileRules = formatCssRules({
+  minTileWidth: tileSettings.tiles.minWidth + "px",
+  containerPadding: settings.portfolioLayouts.container.padding,
+  overlayPadding: tileSettings.tiles.overlayPadding,
+  tileGap: settings.portfolioLayouts.container.gap,
+  tileRatio: tileSettings.tiles.aspectRatio,
+  overlayInset: tileSettings.tiles.overlayInset,
+  containerWidth: settings.portfolioLayouts.container.width,
+  ...rules,
+});
+---
+
+<style>
+  .tile-container {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(var(--minTileWidth), 100%), 1fr)
+    );
+    gap: var(--tileGap);
+    padding: var(--containerPadding);
+    max-width: var(--containerWidth);
+  }
+</style>
+
+<div id={props.containerId} class="tile-container" style={coolTileRules}>
+  <slot />
+</div>

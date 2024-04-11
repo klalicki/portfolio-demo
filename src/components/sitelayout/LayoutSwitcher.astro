@@ -1,0 +1,110 @@
+---
+import settings from "../../settings/menu.json";
+
+// import templates
+import SidebarPage from "./Sidebar/SidebarPage.astro";
+import TopbarPage from "./Topbar/TopbarPage.astro";
+
+let PageLayout;
+switch (settings.position.discriminant) {
+  case "side":
+    PageLayout = SidebarPage;
+    break;
+  case "top":
+    PageLayout = TopbarPage;
+    break;
+  default:
+    PageLayout = SidebarPage;
+
+    break;
+}
+---
+
+<PageLayout>
+  <script>
+    // alert(buttons.length);
+    const setChildrenHidden = (element: Element, isHidden: boolean) => {
+      if (element.firstElementChild) {
+        Array.from(element.firstElementChild.children).forEach(
+          (item: Element) => {
+            // @ts-ignore
+            item.tabIndex = isHidden ? -1 : 0;
+          }
+        );
+      }
+    };
+    const hideAllMenus = () => {
+      document.querySelectorAll(".menu-submenu").forEach((submenu) => {
+        submenu.classList.toggle("submenu-hidden", true);
+        setChildrenHidden(submenu, true);
+      });
+    };
+    const hideMobileMenu = () => {
+      document
+        .querySelector(".menu-main-group")
+        ?.classList.toggle("menu-mobile-hidden", true);
+    };
+    // hide the menu upon clicking outside of it
+
+    window.addEventListener("click", (event) => {
+      //@ts-ignore not sure why i need this but i do
+      if (
+        !document.querySelector(".menu-main-group")?.contains(event.target) &&
+        !document.querySelector("#menu-toggle")?.contains(event.target)
+      ) {
+        hideAllMenus();
+        hideMobileMenu();
+      }
+    });
+    window.addEventListener("focusout", (event) => {
+      //@ts-ignore not sure why i need this but i do
+      // console.log(event.relatedTarget);
+      if (
+        !document.querySelector(".menu-main")?.contains(event.relatedTarget)
+      ) {
+        hideAllMenus();
+        hideMobileMenu();
+      }
+    });
+
+    document.addEventListener("astro:page-load", () => {
+      // add event listener to the dropdown buttons to open/close the menus
+      const buttons = document.querySelectorAll(".menu-dropdown-button");
+
+      buttons.forEach((item) => {
+        item.addEventListener("click", () => {
+          const menuID = item.getAttribute("data-menu-id") || "";
+          const isInitiallyHidden = document
+            .getElementById(menuID)
+            ?.classList.contains("submenu-hidden");
+          hideAllMenus();
+          document
+            .getElementById(menuID)
+            ?.classList.toggle("submenu-hidden", !isInitiallyHidden);
+          setChildrenHidden(document.getElementById(menuID), false);
+        });
+      });
+      // add event listener to open menus on hover
+      const menuHoverTriggers = document.querySelectorAll(
+        ".dropdown-button-wrapper > *"
+      );
+      menuHoverTriggers.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          const menuID = item.getAttribute("data-menu-id") || "";
+
+          hideAllMenus();
+          document
+            .getElementById(menuID)
+            ?.classList.toggle("submenu-hidden", false);
+        });
+      });
+
+      document.querySelector("#menu-toggle")?.addEventListener("click", () => {
+        document
+          .querySelector(".menu-main-group")
+          ?.classList.toggle("menu-mobile-hidden");
+      });
+    });
+  </script>
+  <slot />
+</PageLayout>

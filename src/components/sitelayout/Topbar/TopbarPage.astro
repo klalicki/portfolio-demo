@@ -1,0 +1,45 @@
+---
+import TopbarNav from "./TopbarNav.astro";
+import { settings } from "../../helpers/settingsHelper";
+import { formatCssRules } from "../../helpers/formatCssRules";
+const cssRules = formatCssRules({
+  menuBackgroundColor: settings.menu.colors.backgroundColor,
+  menuHeight: settings.menu.sizes.topBarHeight,
+  blurStyle: settings.menu.appearance.blurBehind ? "blur(10px)" : "none",
+  verticalPadding: settings.pageArea.padding.vertical,
+});
+---
+
+<style>
+  body {
+    padding: 0;
+  }
+  header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-height: var(--menuHeight);
+
+    right: 0;
+    background-color: var(--menuBackgroundColor);
+    backdrop-filter: var(--blurStyle);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+    z-index: 10;
+  }
+  main {
+    padding-top: calc(var(--menuHeight) + var(--verticalPadding));
+  }
+</style>
+<body style={cssRules}>
+  <header>
+    <TopbarNav />
+  </header>
+  <div class="nav-spacer"></div>
+  <main id="main-content">
+    <slot />
+  </main>
+</body>

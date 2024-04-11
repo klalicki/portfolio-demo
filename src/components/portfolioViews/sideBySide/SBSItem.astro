@@ -1,0 +1,63 @@
+---
+import Image from "astro/components/Image.astro";
+const { props } = Astro;
+const { title, url, thumbnail, accent, index } = Astro.props;
+const isOdd = index % 2;
+import portfolioLayouts from "../../../settings/portfolioLayouts.json";
+// console.log(props)
+---
+
+<style
+  define:vars={{ tileAspectRatio: portfolioLayouts.sideBySide.tileAspectRatio }}
+>
+  .sbs-item {
+    display: flex;
+    flex-wrap: wrap;
+    /* controlled padding */
+    /* border: 2px solid red; */
+  }
+  .sbs-item-odd {
+    flex-direction: row-reverse;
+  }
+
+  .sbs-image {
+    /* controlled aspect ratio,border style? */
+    /* height: 100%; */
+    aspect-ratio: var(--tileAspectRatio);
+    object-fit: cover;
+    height: 100%;
+    position: relative;
+  }
+  .sbs-image-container {
+    flex-grow: 1;
+    flex-basis: 250px;
+    /* height: 100px; */
+    /* fontrolled height */
+  }
+
+  .sbs-text-panel {
+    /* controlled - flex positioning, text align,padding */
+    flex-basis: 10px;
+    flex-grow: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+</style>
+<div class:list={["sbs-item", isOdd && "sbs-item-odd"]}>
+  <div class:list={["sbs-image-container"]}>
+    {
+      thumbnail ? (
+        <Image widths={[700]} class={"sbs-image"} src={thumbnail} alt="" />
+      ) : (
+        <div class="sbs-image" style={{ backgroundColor: accent }} />
+      )
+    }
+  </div>
+  <div class="sbs-text-panel">
+    <a href={url}> {title}</a>
+  </div>
+
+  <slot />
+</div>

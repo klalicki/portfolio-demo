@@ -1,0 +1,183 @@
+---
+const { props } = Astro;
+const imagePath = "../../assets/images" + props.image;
+import Image from "astro/components/Image.astro";
+import { settings } from "../helpers/settingsHelper";
+import { getImage } from "astro:assets";
+import { getRandomString } from "../helpers/getRandomString";
+
+import "glightbox/dist/css/glightbox.min.css";
+
+let imageSrc = "";
+let imageSrcSet = "";
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "./../../**/*.{jpeg,jpg,png,gif}"
+);
+// console.log(images);
+
+if (!images[imagePath]) {
+}
+if (images && images[imagePath]) {
+  const fancyImage = await getImage({
+    src: images[imagePath](),
+    widths: [512, 1024, 2048, 4096],
+    format: "webp",
+  });
+  // console.log(fancyImage.srcSet.values[0]);
+  imageSrc = fancyImage.src;
+  imageSrcSet = fancyImage.srcSet.attribute;
+}
+const styleAttrs: { [key: string]: string } = {};
+if (props.forceAspectRatio) {
+  styleAttrs.aspectRatio = props.forceAspectRatio;
+  styleAttrs.objectFit = "cover";
+}
+---
+
+<script>
+  import GLightbox from "glightbox";
+  const glb = GLightbox({ skin: "custom" });
+  document.addEventListener("astro:page-load", () => {
+    // This only runs once.
+    glb.reload();
+  });
+</script>
+<style>
+  .image-popout {
+    /* margin: 0; */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .image-popout > a {
+    margin: 0;
+    cursor: zoom-in;
+    display: flex;
+  }
+
+  .image-popout figcaption {
+    font-style: italic;
+    padding: 0.5rem;
+    padding-bottom: 0.7rem;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.687);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .image-popout:hover figcaption,
+  .image-popout:focus figcaption {
+    opacity: 1;
+  }
+</style>
+
+<!-- you can use this style tag to style the lightbox popup -->
+<style is:global>
+  .glightbox-custom .gslide-description {
+    background: #fff;
+  }
+
+  .glightbox-custom .gdesc-inner {
+    padding: 22px 20px;
+  }
+
+  .glightbox-custom .gslide-title {
+    font-size: 1em;
+    font-weight: normal;
+    font-family: arial;
+    color: #000;
+    margin-bottom: 19px;
+    line-height: 1.4em;
+  }
+
+  .glightbox-custom .gslide-desc {
+    font-size: 0.86em;
+    margin-bottom: 0;
+    font-family: arial;
+    line-height: 1.4em;
+  }
+
+  .glightbox-custom .gslide-video {
+    background: #000;
+  }
+
+  .glightbox-custom .gprev,
+  .glightbox-custom .gnext,
+  .glightbox-custom .gclose {
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 4px;
+  }
+
+  .glightbox-custom .gprev path,
+  .glightbox-custom .gnext path,
+  .glightbox-custom .gclose path {
+    fill: #fff;
+  }
+
+  .glightbox-custom .gprev {
+    position: absolute;
+    top: -100%;
+    left: 30px;
+    width: 40px;
+    height: 50px;
+  }
+
+  .glightbox-custom .gnext {
+    position: absolute;
+    top: -100%;
+    right: 30px;
+    width: 40px;
+    height: 50px;
+  }
+
+  .glightbox-custom .gclose {
+    width: 35px;
+    height: 35px;
+    top: 15px;
+    right: 10px;
+    position: absolute;
+  }
+
+  .glightbox-custom .gclose svg {
+    width: 18px;
+    height: auto;
+  }
+
+  .glightbox-custom .gclose:hover {
+    opacity: 1;
+  }
+  .glightbox-custom .gdesc-inner {
+    background-color: white;
+    padding: 1rem;
+
+    font-style: italic;
+  }
+  .glightbox-custom .gdesc-inner .gslide-desc {
+    font-family: var(--p-fontFamily);
+  }
+</style>
+
+<figure class="image-popout">
+  <a
+    href={imageSrc}
+    data-sizes="(max-width: 512px) 512px, (max-width: 1024px) 1024px, (max-width: 2048px) 2048px, 4096px"
+    data-srcset={imageSrcSet}
+    data-description={props.caption}
+    data-gallery={props.galleryID || getRandomString()}
+    class="glightbox"
+    ><Image
+      style={styleAttrs}
+      src={images[imagePath]()}
+      alt={props.altText || ""}
+      format="webp"
+      width={settings.pageArea.images.optimizationWidth}
+    /></a
+  >
+  {
+    props.hideCaption && props.caption && (
+      <figcaption>{props.caption}</figcaption>
+    )
+  }
+</figure>
